@@ -16,24 +16,40 @@
 
         <script type="text/javascript">
 
+            /*
+                Quadrados em um plano são coloridos diferentemente com cor preta ou branca.
+                Arbitrariamente identificamos um quadrado como a formiga.
+                A formiga pode viajar em qualquer uma das quatro direções cardeais a cada passo que é dado.
+                Os movimentos executados pela formiga seguem as regras abaixo:
+
+                    - Estando em um quadrado branco, vire 90 ° para a direita, mude a cor do quadrado e avance uma unidade;
+                    - Estando em um quadrado preto, vire 90 ° para a esquerda, mude a cor do quadrado, avance uma unidade.
+                
+                Formiga de Langton também pode ser descrito como um autômato celular, onde a grade é de cor preta ou branca e do
+                quadrado "formiga" tem uma das oito cores diferentes atribuídos para codificar a combinação de estado preto/branco
+                e a direção atual do movimento da formiga.
+
+            */
+
+
             const canvas = document.getElementById('canvas');
             const surface = canvas.getContext('2d');
-            surface.fillStyle = "#FFFFFF"
+            surface.fillStyle = "rgba(0,0,0,1)"
 
             var AntClass = {
-                x:0,
+                x:0, 
                 y:0,
-                kierunek: 1,
+                direction: 1,
 
                 turnLeft: function(){
-                    this.kierunek--;
-                    if(this.kierunek<1) this.kierunek = 4;
-                    this.move(this.kierunek);
+                    this.direction--;
+                    if(this.direction<1) this.direction = 4;
+                    this.move(this.direction);
                 },
                 turnRight: function(){
-                    this.kierunek++;
-                    if(this.kierunek>4) this.kierunek = 1;
-                    this.move(this.kierunek)
+                    this.direction++;
+                    if(this.direction>4) this.direction = 1;
+                    this.move(this.direction)
                 },
                 move: function(dir){
                     switch(dir){
@@ -59,13 +75,18 @@
             var ant = Object.create(AntClass);
             ant.x = Math.round(canvas.width/2);
             ant.y = Math.round(canvas.height/2);
-            ant.kierunek = 1;
+            ant.direction = 1;
 
             window.addEventListener("load",goAnt,false);
 
             function goAnt(){
                 var color = surface.getImageData(ant.x,ant.y,1,1);
                 var red = color.data[0];
+
+                console.log("pos_x: "+ant.x+" pos_y: "+ant.y)
+                console.log("red: "+red)
+                console.log("direction: "+ant.direction)
+                console.log("\n");
 
                 if(red > 100){
                     surface.fillStyle = "rgba(0,0,0,1)";
@@ -78,7 +99,7 @@
                     ant.turnRight();
                 }
                 //timmer
-                window.setTimeout(goAnt,1);
+                window.setTimeout(goAnt,500);
             }
 
 
